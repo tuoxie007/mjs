@@ -66,13 +66,13 @@ CFLAGS += $(COMMON_CFLAGS)
 # NOTE: we compile straight from sources, not from the single amalgamated file,
 # in order to make sure that all sources include the right headers
 $(PROG): $(TOP_SOURCES) $(TOP_HEADERS) $(BUILD_DIR)
-	$(CLANG) $(CFLAGS) $(CPPFLAGS) $(TOP_SOURCES) -o $(PROG)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(TOP_SOURCES) -o $(PROG)
 
 $(BUILD_DIR):
 	mkdir -p $@
 
 $(BUILD_DIR)/%.o: %.c $(TOP_HEADERS)
-	$(CLANG) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 # On Windows and Mac, run container as root since volume sharing on those OSes
 # doesn't play nice with unprivileged user.
@@ -155,8 +155,8 @@ endef
 # 2: binary name component, like "O0" or whatever
 # 3: additional compiler flags
 define compile_test_with_opt
-$(eval $(call compile_test_with_compiler,$(CLANG),clang_$2,$(ASAN_CFLAGS) $1 $3))
-$(eval $(call compile_test_with_compiler,$(CLANG),clang_32bit_$2,-m32 $1 $3))
+$(eval $(call compile_test_with_compiler,$(CC),clang_$2,$(ASAN_CFLAGS) $1 $3))
+$(eval $(call compile_test_with_compiler,$(CC),clang_32bit_$2,-m32 $1 $3))
 $(eval $(call compile_test_with_compiler,gcc,gcc_$2,$1 $3))
 endef
 

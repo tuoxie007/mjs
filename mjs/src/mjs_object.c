@@ -49,6 +49,7 @@ MJS_PRIVATE struct mjs_property *mjs_get_own_property(struct mjs *mjs,
                                                       mjs_val_t obj,
                                                       const char *name,
                                                       size_t len) {
+  //printf("mjs_get_own_property %s\n", name);
   struct mjs_property *p;
   struct mjs_object *o;
 
@@ -61,14 +62,33 @@ MJS_PRIVATE struct mjs_property *mjs_get_own_property(struct mjs *mjs,
   if (len <= 5) {
     mjs_val_t ss = mjs_mk_string(mjs, name, len, 1);
     for (p = o->properties; p != NULL; p = p->next) {
-      if (p->name == ss) return p;
+      if (p->name == ss) {
+        //printf("own property found %s\n", name);
+        return p;
+      }
     }
   } else {
     for (p = o->properties; p != NULL; p = p->next) {
-      if (mjs_strcmp(mjs, &p->name, name, len) == 0) return p;
+      if (mjs_strcmp(mjs, &p->name, name, len) == 0) {
+        //printf("own property found %s\n", name);
+        return p;
+      }
     }
+    //printf("own property not found and return p %s %p\n", name, p);
     return p;
   }
+
+  if (strcmp(name, "__get") != 0) {
+    //printf("not found property fallback to __get %s\n", name);
+    const char * __get = "__get";
+    for (p = o->properties; p != NULL; p = p->next) {
+      if (strcmp((char *)&p->name, __get) == 0) {
+        //printf("own property found %s\n", name);
+        return p;
+      }
+    }
+  }
+  //printf("not found property %s\n", name);
 
   return NULL;
 }

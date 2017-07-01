@@ -1,6 +1,6 @@
 let x = 1, y = 2, z = 3;
 
-let f = function(x) {
+let f = function(x, t) {
   let f2 = function(y) {
     return x - z + y;
   };
@@ -17,4 +17,4 @@ let o = {
   z: 123
 };
 
-f(5) === 9 && o.x(12) === 144;
+f(5, 1) === 9 && o.x(12) === 144;
